@@ -3,8 +3,6 @@ import App from 'next/app';
 import { ApolloProvider } from '@apollo/react-hooks';
 import withApollo from '../lib/withApollo'
 
-import withData from '../util/apollo-client';
-
 class MyApp extends App {
   static async getInitialProps({ Component, ctx }) {
     const pageProps = Component.getInitialProps

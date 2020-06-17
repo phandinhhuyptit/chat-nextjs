@@ -2,14 +2,14 @@ import React, { Component } from 'react'
 import dynamic from 'next/dynamic'
 import Head from 'next/head'
 
-const Full = dynamic({ loader: () => import('../containers/Content') })
+const Layout = dynamic({ loader: () => import('../containers/Layout') })
 const Content = dynamic({ loader: () => import('../containers/Content') })
 
 class HomePage extends Component { // eslint-disable-line
   render() {
     return (
       <div>
-        <Full>
+        <Layout>
           <Head>
             <title>Trang Chủ</title>
 
@@ -41,7 +41,7 @@ class HomePage extends Component { // eslint-disable-line
             <meta name="twitter:image" content="" />
           </Head>
           <Content />
-        </Full>
+        </Layout>
       </div>
     )
   }
