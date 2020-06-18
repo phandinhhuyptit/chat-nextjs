@@ -1,14 +1,14 @@
 import React, { Component } from 'react'
 import dynamic from 'next/dynamic'
 import Head from 'next/head'
-
+import { IndexWrapper } from  '../theme/global/index.styled' 
 const Layout = dynamic({ loader: () => import('../containers/Layout') })
-const Content = dynamic({ loader: () => import('../containers/Content') })
+const Home = dynamic({ loader: () => import('../containers/Home') })
 
-class HomePage extends Component { // eslint-disable-line
-  render() {
+
+const  HomePage = (props) => { // eslint-disable-line
     return (
-      <div>
+      <IndexWrapper>
         <Layout>
           <Head>
             <title>Trang Chủ</title>
@@ -40,11 +40,10 @@ class HomePage extends Component { // eslint-disable-line
             <meta name="twitter:description" content="Anle | Trang Chủ" />
             <meta name="twitter:image" content="" />
           </Head>
-          <Content />
+          <Home />
         </Layout>
-      </div>
+      </IndexWrapper>
     )
-  }
 }
 
 export default HomePage
