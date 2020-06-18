@@ -24,4 +24,16 @@ export const HomeWrapper = styled.div`
       height: 350px;
     }
   }
+
+
 `;
+
+export const MyForm = styled.form`
+   
+   .ant-col.ant-form-item-label {
+      width: 100%;
+      display: flex;
+    }
+  
+`;
+
