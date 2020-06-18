@@ -1,7 +1,12 @@
-import React from "react";
+import React from 'react';
+import { ContentWrapper } from './styled';
 
-const Content = () => {
-  return <div className="content-wrapper">Content</div>;
+const Content = (props) => {
+  return (
+    <ContentWrapper>
+      <div className="content-wrapper">Content</div>;
+    </ContentWrapper>
+  );
 };
 
 export default Content;
