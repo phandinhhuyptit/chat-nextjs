@@ -33,6 +33,7 @@
     "react-particles-js": "^3.2.1",
     "styled-components": "^5.1.1",
     "subscriptions-transport-ws": "^0.9.16",
+    "uuid": "^8.1.0",
     "ws": "^7.3.0",
     "yup": "^0.29.1"
   },
