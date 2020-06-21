@@ -2,9 +2,24 @@ import React, { useState } from 'react';
 import { HomeWrapper, MyForm } from './styled';
 import { Form, Card, Input, Button, Checkbox } from 'antd';
 import Particles from 'react-particles-js';
+import loGet from 'lodash/get'
+import { gql } from "apollo-boost";
+import { useMutation } from "@apollo/react-hooks";
 import { Formik } from 'formik';
+
+import  { v4 as uuidv4 } from 'uuid'
 import * as Yup from 'yup';
 
+
+const CREATE_USER = gql`
+  mutation createUser($input: UserInput!) {
+    createUser(input: $input) {
+      userId
+      name
+      email
+    }
+  }
+`;
 const { Meta } = Card;
 const tabList = [
   {
@@ -33,6 +48,7 @@ const validationSchema = Yup.object().shape({
 
 const Home = (props) => {
   const [tab, setTab] = useState('login');
+  const [createUser,{ loading: mutationLoading, error: mutationError }] = useMutation(CREATE_USER);
 
   const onTabChange = (key) => {
     setTab(key);
@@ -80,28 +96,24 @@ const Home = (props) => {
               initialValues={{ name: '', email: '' }}
               validationSchema={validationSchema}
               onSubmit={async (values, { setSubmitting, resetForm }) => {
-                // try {
-                //   const book = {
-                //     title: loGet(values, ['title']),
-                //     name: loGet(values, ['name']),
-                //     genre: loGet(values, ['genre']),
-                //     authorId: loGet(values, ['author']),
-                //   };
-                //   setSubmitting(true);
-                //   const result = await addBook({
-                //     variables: book,
-                //     refetchQueries: () => ['GET_BOOKS'],
-                //   });
-                //   toast.success('Success!', {
-                //     position: toast.POSITION.TOP_RIGHT,
-                //   });
-                //   resetForm();
-                //   setSubmitting(false);
-                // } catch (error) {
-                //   toast.warn(`${error.message}`, {
-                //     position: toast.POSITION.TOP_RIGHT,
-                //   });
-                // }
+                try {
+                  const user = {
+                    userId : uuidv4(),
+                    name: loGet(values, ['name']),
+                    email: loGet(values, ['genre']),
+                  };
+                  console.log(user)
+                  setSubmitting(true);
+                  const result = await  createUser({
+                    variables: {
+                      input:user
+                    }
+                  });
+                  resetForm();
+                  setSubmitting(false);
+                } catch (error) {
+                  setSubmitting(false);
+                }
               }}
             >
               {({
@@ -123,7 +135,7 @@ const Home = (props) => {
                       colon={false}
                       required
                       hasFeedback={touched.name && errors.name}
-                      validateStatus={
+                      validateStatus={  
                         touched.name && errors.name ? 'error' : 'success'
                       }
                       help={touched.name && errors.name ? errors.name : null}
@@ -162,8 +174,10 @@ const Home = (props) => {
                         className="button-submit"
                         type="primary"
                         shape="round"
+                        disabled={isSubmitting}
                         size={"default"}
-                        onClick={()=>{
+                        onClick={(e)=>{
+                          e.preventDefault();
                           handleSubmit()
                         }}
                       >
