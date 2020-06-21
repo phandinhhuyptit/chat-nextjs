@@ -9,6 +9,7 @@ export default gql`
   type UserPayload {
     userId: String
     name: String
+    email : String
   }
 
   type MessagePayload {
@@ -61,6 +62,7 @@ export default gql`
   input UserInput {
     userId: String
     name: String
+    email: String
   }
 
   input ChatRoomInput {
