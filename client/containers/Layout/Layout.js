@@ -9,9 +9,9 @@ const Footer = dynamic({ loader: () => import('../../components/Footer') });
 const Layout = (props) => {
   return (
     <div>
-      <Header />
+      {/* <Header /> */}
       {props.children}
-      <Footer />
+      {/* <Footer /> */}
     </div>
   );
 };

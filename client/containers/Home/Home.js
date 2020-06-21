@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { HomeWrapper, MyForm } from './styled';
 import { Form, Card, Input, Button, Checkbox } from 'antd';
+import Particles from 'react-particles-js';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 
@@ -40,6 +41,30 @@ const Home = (props) => {
   return (
     <HomeWrapper>
       <div className="home-wrapper">
+        <Particles
+          className="tsparticles-wrapper"
+          params={{
+            particles: {
+              number: {
+                value: 250,
+              },
+              size: {
+                value: 5,
+              },
+              move: {
+                speed: 7,
+              },
+            },
+            interactivity: {
+              events: {
+                onhover: {
+                  enable: true,
+                  mode: 'repulse',
+                },
+              },
+            },
+          }}
+        />
         <Card
           className="card-login-register"
           tabList={tabList}
@@ -55,28 +80,28 @@ const Home = (props) => {
               initialValues={{ name: '', email: '' }}
               validationSchema={validationSchema}
               onSubmit={async (values, { setSubmitting, resetForm }) => {
-                try {
-                  const book = {
-                    title: loGet(values, ['title']),
-                    name: loGet(values, ['name']),
-                    genre: loGet(values, ['genre']),
-                    authorId: loGet(values, ['author']),
-                  };
-                  setSubmitting(true);
-                  const result = await addBook({
-                    variables: book,
-                    refetchQueries: () => ['GET_BOOKS'],
-                  });
-                  toast.success('Success!', {
-                    position: toast.POSITION.TOP_RIGHT,
-                  });
-                  resetForm();
-                  setSubmitting(false);
-                } catch (error) {
-                  toast.warn(`${error.message}`, {
-                    position: toast.POSITION.TOP_RIGHT,
-                  });
-                }
+                // try {
+                //   const book = {
+                //     title: loGet(values, ['title']),
+                //     name: loGet(values, ['name']),
+                //     genre: loGet(values, ['genre']),
+                //     authorId: loGet(values, ['author']),
+                //   };
+                //   setSubmitting(true);
+                //   const result = await addBook({
+                //     variables: book,
+                //     refetchQueries: () => ['GET_BOOKS'],
+                //   });
+                //   toast.success('Success!', {
+                //     position: toast.POSITION.TOP_RIGHT,
+                //   });
+                //   resetForm();
+                //   setSubmitting(false);
+                // } catch (error) {
+                //   toast.warn(`${error.message}`, {
+                //     position: toast.POSITION.TOP_RIGHT,
+                //   });
+                // }
               }}
             >
               {({
@@ -90,7 +115,6 @@ const Home = (props) => {
                 isSubmitting,
                 handleReset,
               }) => {
-                console.log(values)
                 return (
                   <MyForm>
                     <Form.Item
@@ -100,11 +124,7 @@ const Home = (props) => {
                       required
                       hasFeedback={touched.name && errors.name}
                       validateStatus={
-                        !touched.name && !errors.name
-                          ? 'success'
-                          : touched.name && !errors.name
-                          ? 'success'
-                          : 'error'
+                        touched.name && errors.name ? 'error' : 'success'
                       }
                       help={touched.name && errors.name ? errors.name : null}
                     >
@@ -124,11 +144,7 @@ const Home = (props) => {
                       required
                       hasFeedback={touched.email && errors.email}
                       validateStatus={
-                        !touched.email && !errors.email
-                          ? 'success'
-                          : touched.email && !errors.email
-                          ? 'success'
-                          : 'error'
+                        touched.email && errors.email ? 'error' : 'success'
                       }
                       help={touched.email && errors.email ? errors.email : null}
                     >
@@ -141,6 +157,19 @@ const Home = (props) => {
                         onBlur={handleBlur}
                       />
                     </Form.Item>
+                    <Form.Item className="button-wrapper">
+                      <Button
+                        className="button-submit"
+                        type="primary"
+                        shape="round"
+                        size={"default"}
+                        onClick={()=>{
+                          handleSubmit()
+                        }}
+                      >
+                         Submit                          
+                      </Button>
+                    </Form.Item>
                   </MyForm>
                 );
               }}
@@ -148,7 +177,6 @@ const Home = (props) => {
           </div>
         </Card>
       </div>
-      ;
     </HomeWrapper>
   );
 };
