@@ -7,6 +7,23 @@ export const HomeWrapper = styled.div`
     display: flex;
     justify-content: center !important;
     align-items: center;
+
+    .button-wrapper {
+      margin-top : 2rem;
+      .button-submit {
+        width: 100%;
+        height: 39px;
+      }
+    }
+
+    .tsparticles-wrapper {
+      width: 100vw;
+      height: 100vh;
+      background-image: url('https://codersera.com/blog/wp-content/uploads/2019/07/photo-1518933165971-611dbc9c412d.jpg');
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: cover;
+    }
     .ant-card-head {
       padding: 0;
 
@@ -22,18 +39,17 @@ export const HomeWrapper = styled.div`
     }
     .card-login-register {
       height: 350px;
+      position: fixed;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
     }
   }
-
-
 `;
 
 export const MyForm = styled.form`
-   
-   .ant-col.ant-form-item-label {
-      width: 100%;
-      display: flex;
-    }
-  
+  .ant-col.ant-form-item-label {
+    width: 100%;
+    display: flex;
+  }
 `;
-
