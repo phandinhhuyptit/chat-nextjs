@@ -3,15 +3,15 @@ import dynamic from 'next/dynamic'
 import Head from 'next/head'
 import { IndexWrapper } from  '../theme/global/index.styled' 
 const Layout = dynamic({ loader: () => import('../containers/Layout') })
-const Home = dynamic({ loader: () => import('../containers/Home') })
+const Room = dynamic({ loader: () => import('../containers/Room') })
 
 
-const  HomePage = (props) => { // eslint-disable-line
+const RoomPage = (props) => { // eslint-disable-line
     return (
       <IndexWrapper>
         <Layout>
           <Head>
-            <title>Trang Chủ</title>
+            <title>Danh Sách Phòng</title>
 
             {/* SEO */}
             <meta httpEquiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -40,10 +40,10 @@ const  HomePage = (props) => { // eslint-disable-line
             <meta name="twitter:description" content="HuyIT | Trang Chủ" />
             <meta name="twitter:image" content="" />
           </Head>
-          <Home />
+          <Room />
         </Layout>
       </IndexWrapper>
     )
 }
 
-export default HomePage
+export default RoomPage
