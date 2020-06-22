@@ -1,61 +1,124 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, Button, Row, Col, Input, Form } from 'antd';
 import { RoomPopupWrapper } from './styled';
+import { useMutation } from "@apollo/react-hooks";
+import { gql } from 'apollo-boost';
 import PropTypes from 'prop-types';
+import  { v4 as uuidv4 } from 'uuid';
+
+const CREATE_ROOM = gql`
+  mutation createChatRoom($input: ChatRoomInput!) {
+    createChatRoom(input: $input) {
+      chatRoomId
+      name
+    }
+  }
+`;
 
 const layout = {
   labelCol: { span: 24 },
   wrapperCol: { span: 24 },
 };
 
-const RoomPopup = (props) => {    
-  const [title,_setTitle] = useState({
-     value:'',
-     isInputValid:true,
-     errorMsg:''
-  })  
-  
+const RoomPopup = (props) => {
+  const [title, _setTitle] = useState({
+    value: '',
+    isInputValid: true,
+    errorMsg: '',
+  });
+  const [createChatRoom,{ loading: mutationLoading, error: mutationError }] = useMutation(CREATE_ROOM);
+
+  const onSubmit = async () => {
+    const { isInputValid, errorMsg } = validateTitleInput(title.value);
+    if (isInputValid) {
+       const room = {
+        chatRoomId: uuidv4(),
+        name: title.value
+       }  
+      try {
+        const result = await createChatRoom({
+          variables: {
+            input:room
+          }
+        });  
+        onCloseRoomPopup();
+        _setTitle({
+          value: '',
+          isInputValid: true,
+          errorMsg: '',
+        });
+      } catch (error) {
+        console.log(error)
+      }
+       
+    } else {
+      setTitle(title.value);
+    }
+  };
+
+
   const validateTitleInput = (checkingText) => {
-    
-    if(checkingText.length < 10){
-        return {
-            isInputValid:false,
-            errorMsg:'Title must have at least 10 characters'
-        }
+    if (!checkingText) {
+      return {
+        isInputValid: false,
+        errorMsg: 'Title is required',
+      };
+    }
+    if (checkingText.length < 10) {
+      return {
+        isInputValid: false,
+        errorMsg: 'Title must have at least 10 characters',
+      };
     }
     return {
-        isInputValid : true,
-        errorMsg:''
-    }
- }
+      isInputValid: true,
+      errorMsg: '',
+    };
+  };
 
-
- const setTitle = (value) =>{
-     const  {isInputValid , errorMsg} = validateTitleInput(value)   
-
+  const setTitle = (value) => {
+    const { isInputValid, errorMsg } = validateTitleInput(value);
     _setTitle({
-        value: value,
-        isInputValid:isInputValid,
-        errorMsg: errorMsg  
-    })  
- }
+      value: value,
+      isInputValid: isInputValid,
+      errorMsg: errorMsg,
+    });
+  };
 
-  const { onCloseRoomPopup, isRoomPopup } = props; 
+  const { onCloseRoomPopup, isRoomPopup } = props;
 
   return (
     <Modal
       visible={isRoomPopup}
       title="Create Room"
-      onCancel={onCloseRoomPopup}
+      onCancel={() => {
+        onCloseRoomPopup();
+        _setTitle({
+          value: '',
+          isInputValid: true,
+          errorMsg: '',
+        });
+      }}
       footer={[
         <Button
+          loading={mutationLoading}
           key="create-room"
-          // onClick={this.handleChangePriority}
+          onClick={onSubmit}
           // loading={isUpdateProperty}
         >
           Create
         </Button>,
-        <Button onClick={() => onCloseRoomPopup()} key="cancel-room">
+        <Button
+          onClick={() => {
+            onCloseRoomPopup();
+            _setTitle({
+              value: '',
+              isInputValid: true,
+              errorMsg: '',
+            });
+          }}
+          key="cancel-room"
+        >
           Cancel
         </Button>,
       ]}
@@ -69,7 +132,9 @@ const RoomPopup = (props) => {
                 colon={false}
                 required
                 validateStatus={!!title.isInputValid ? 'success' : 'error'}
-                help={title.errorMsg && !title.isInputValid ? title.errorMsg : null}
+                help={
+                  title.errorMsg && !title.isInputValid ? title.errorMsg : null
+                }
               >
                 <Input
                   name="title"

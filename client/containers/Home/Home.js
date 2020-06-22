@@ -6,10 +6,8 @@ import loGet from 'lodash/get'
 import { gql } from "apollo-boost";
 import { useMutation } from "@apollo/react-hooks";
 import { Formik } from 'formik';
-
-import  { v4 as uuidv4 } from 'uuid'
+import  { v4 as uuidv4 } from 'uuid';
 import * as Yup from 'yup';
-
 
 const CREATE_USER = gql`
   mutation createUser($input: UserInput!) {
