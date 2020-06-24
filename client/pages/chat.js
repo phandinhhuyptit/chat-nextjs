@@ -3,7 +3,7 @@ import dynamic from 'next/dynamic'
 import Head from 'next/head'
 import { IndexWrapper } from  '../theme/global/index.styled' 
 const Layout = dynamic({ loader: () => import('../containers/Layout') })
-// const Room = dynamic({ loader: () => import('../containers/Room') })
+const Chat = dynamic({ loader: () => import('../containers/Chat') })
 
 
 const RoomPage = (props) => { // eslint-disable-line
@@ -40,7 +40,7 @@ const RoomPage = (props) => { // eslint-disable-line
             <meta name="twitter:description" content="HuyIT | Trang Chủ" />
             <meta name="twitter:image" content="" />
           </Head>
-          {/* <Room /> */}
+          <Chat />
         </Layout>
       </IndexWrapper>
     )
