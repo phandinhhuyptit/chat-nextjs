@@ -2,14 +2,15 @@ import React, { Component } from 'react'
 import dynamic from 'next/dynamic'
 import Head from 'next/head'
 import { IndexWrapper } from  '../theme/global/index.styled' 
+import { get } from 'lodash'
 const Layout = dynamic({ loader: () => import('../containers/Layout') })
 const Chat = dynamic({ loader: () => import('../containers/Chat') })
 
 
-const RoomPage = (props) => { // eslint-disable-line
+const ChatPage = (props) => { // eslint-disable-line
     return (
       <IndexWrapper>
-        <Layout>
+        <Layout {...props}>
           <Head>
             <title>Trò Chuyện Bốn Phương</title>
 
@@ -18,7 +19,7 @@ const RoomPage = (props) => { // eslint-disable-line
             <meta name="keywords" content="HuyIT | Trang Chủ" />
             <meta name="description" content="HuyIT | Trang Chủ" />
             <meta name="type" content="website" />
-            <meta name="robots" content="INDEX, FOLLOW" />
+            <meta name="robots" content="INDEX, FOLL  OW" />
             <meta name="language" content="Vietnamese" />
 
             {/* Open Graph data */}
@@ -40,10 +41,15 @@ const RoomPage = (props) => { // eslint-disable-line
             <meta name="twitter:description" content="HuyIT | Trang Chủ" />
             <meta name="twitter:image" content="" />
           </Head>
-          <Chat />
+          <Chat {...props}/>
         </Layout>
       </IndexWrapper>
     )
 }
 
-export default RoomPage
+ChatPage.getInitialProps = async ({ query }) =>{
+    const param = await get(query, ['roomId'])
+    return { param }
+} 
+
+export default ChatPage

@@ -6,10 +6,10 @@ const Layout = dynamic({ loader: () => import('../containers/Layout') })
 const Home = dynamic({ loader: () => import('../containers/Home') })
 
 
-const  HomePage = (props) => { // eslint-disable-line
+const HomePage = (props) => { // eslint-disable-line
     return (
       <IndexWrapper>
-        <Layout>
+        <Layout {...props}>
           <Head>
             <title>Trang Chủ</title>
 
@@ -40,10 +40,13 @@ const  HomePage = (props) => { // eslint-disable-line
             <meta name="twitter:description" content="HuyIT | Trang Chủ" />
             <meta name="twitter:image" content="" />
           </Head>
-          <Home />
+          <Home {...props} />
         </Layout>
       </IndexWrapper>
     )
 }
 
+HomePage.getInitialProps = async (ctx) => {
+  return {};
+};
 export default HomePage
