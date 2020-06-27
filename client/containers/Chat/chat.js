@@ -49,11 +49,12 @@ const SUB_CHAT = gql`
 
 const Chat = (props) => {
   const { state, dispatch } = useContext(StoreContext);
+  const user = state?.user ?? null
   const [message, setMessage] = useState('');
   const { loading, error, data } = useQuery(GET_CHAT, {
     variables: { chatRoomId: props.param },
   });
-
+  const [messages, updateMessages] = useState([]);
 
   useEffect(() => {
     if(!Object.keys(state?.user ?? {}).length){
@@ -65,12 +66,26 @@ const Chat = (props) => {
     }
   }, [])
 
+  useEffect(() => {
+    if (data && data.ChatHistoryByRoom) {
+      updateMessages(data.ChatHistoryByRoom);
+    }
+  }, [data]);
 
+  const [sendMessageByRoom] = useMutation(SEND_CHAT);
+  useSubscription(SUB_CHAT, {
+    variables: { roomId: props.param },
+    onSubscriptionData({ subscriptionData }) {
+      updateMessages([
+        ...messages,
+        subscriptionData.data.messageRealtimeByRoom,
+      ]);
+    },
+  });
 
   const sendMessage = async (event) => {
     if (event.keyCode === 13) {
       try {
-        console.log(props.roomId)
         const result = await sendMessageByRoom({
           variables: {
             input: {
@@ -88,7 +103,8 @@ const Chat = (props) => {
     }
   };
 
-  const [sendMessageByRoom] = useMutation(SEND_CHAT);
+  if (loading) return null;
+  if (error) return `Error! ${error}`;
   return (
     <ChatWrapper>
       <div className="chat-wrapper">
@@ -113,26 +129,36 @@ const Chat = (props) => {
             xl={20}
           >
             <div className="messenger">
-              <div className="me-wrapper">
-                <span className="name"> Phan Đình Huy:{' '}</span>
-                <div className="me">
-                  <span className="text-msg">
-                    {' '}
-                    Hello chafo emdasdas dasdasd asdsdas
-                  </span>
-                </div>
-              </div>
-              <div className="member-wrapper">
-                <span className="name"> Phan Đình Huy:{' '}</span>
-                <div className="member">
-                  <span className="text-msg"> World</span>
-                </div>
-              </div>
+              {messages.map((msg) => {
+                const userId = msg?.user?.userId ?? null
+                return (
+                  <>
+                    {user && user.userId === userId ? (
+                      <div className="me-wrapper">
+                        <span className="name"> You: </span>
+                        <div className="me">
+                          <span className="text-msg">
+                            {' '}
+                            {msg?.content ?? ''}
+                          </span>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="member-wrapper">
+                        <span className="name"> {msg?.user?.name ?? ""}: </span>
+                        <div className="member">
+                          <span className="text-msg">{msg?.content ?? ''}</span>
+                        </div>
+                      </div>
+                    )}
+                  </>
+                );
+              })}
             </div>
             <div className="chatting-wrapper">
               <Input
                 onKeyDown={(e) => sendMessage(e)}
-                onChange={(e)=>setMessage(e.target.value)}
+                onChange={(e) => setMessage(e.target.value)}
                 className=""
                 value={message}
                 placeholder="Message..."
