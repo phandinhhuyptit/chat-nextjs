@@ -72,7 +72,6 @@ const Rooms = (props) => {
 
   const onRedirectChat = (roomId) =>{
     dispatch({ type: "UPDATE_ROOM", roomId });
-    console.log(roomId)
     router.replace(`/chat/${roomId}`)
   }
 
