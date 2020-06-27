@@ -1,7 +1,8 @@
 import React from 'react';
 import App from 'next/app';
 import { ApolloProvider } from '@apollo/react-hooks';
-import withApollo from '../lib/withApollo'
+import withApollo from '../lib/withApollo';
+import StoreProvider from '../contexts/storeContext';
 
 class MyApp extends App {
   static async getInitialProps({ Component, ctx }) {
@@ -15,7 +16,9 @@ class MyApp extends App {
     const { Component, pageProps, apollo } = this.props;
     return (
       <ApolloProvider client={apollo}>
-        <Component {...pageProps} />
+        <StoreProvider>
+          <Component {...pageProps} />
+        </StoreProvider>
       </ApolloProvider>
     );
   }

@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState , useEffect } from 'react';
 import { HomeWrapper, MyForm } from './styled';
 import { Form, Card, Input, Button, Checkbox } from 'antd';
 import Particles from 'react-particles-js';
+import { useRouter } from 'next/router'
 import loGet from 'lodash/get'
 import { gql } from "apollo-boost";
 import { useMutation } from "@apollo/react-hooks";
@@ -45,13 +46,14 @@ const validationSchema = Yup.object().shape({
 });
 
 const Home = (props) => {
+  const router = useRouter()
   const [tab, setTab] = useState('login');
   const [createUser,{ loading: mutationLoading, error: mutationError }] = useMutation(CREATE_USER);
 
   const onTabChange = (key) => {
     setTab(key);
   };
-
+ 
   return (
     <HomeWrapper>
       <div className="home-wrapper">
@@ -98,18 +100,20 @@ const Home = (props) => {
                   const user = {
                     userId : uuidv4(),
                     name: loGet(values, ['name']),
-                    email: loGet(values, ['genre']),
+                    email: loGet(values, ['email']),
                   };
-                  console.log(user)
                   setSubmitting(true);
                   const result = await  createUser({
                     variables: {
                       input:user
                     }
                   });
+                  localStorage.setItem("user",JSON.stringify(result?.data?.createUser ?? {}))
                   resetForm();
                   setSubmitting(false);
+                  router.push('/room')
                 } catch (error) {
+                  console.log(error)
                   setSubmitting(false);
                 }
               }}
@@ -193,4 +197,12 @@ const Home = (props) => {
   );
 };
 
+
+Home.getInitialProps = async props => {
+  console.log(localStorage.getItem('user'))
+  // if(localStorage.getItem('user')){
+  //   router.push('/room')
+  // }
+  return {};
+};
 export default Home;
