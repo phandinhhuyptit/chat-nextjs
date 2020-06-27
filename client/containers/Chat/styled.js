@@ -37,10 +37,18 @@ export const ChatWrapper = styled.div`
           overflow-y: scroll;
           height: calc(100vh - 31px);
           .me-wrapper {
+            .name {
+              display: flex;
+              align-items: center;
+            }
             display: flex;
             justify-content: flex-end;
           }
           .member-wrapper {
+            .name {
+              display: flex;
+              align-items: center;
+            }
             display: flex;
           }
 

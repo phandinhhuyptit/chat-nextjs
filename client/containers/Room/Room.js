@@ -1,11 +1,12 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState,useEffect,useContext } from 'react';
 import { Card, Row, Col, Button } from 'antd';
+import { StoreContext } from '../../contexts/storeContext'
 import { useQuery,useSubscription } from '@apollo/react-hooks';
 import RoomPopup from '../../components/RoomPopup';
 import  { v4 as uuidv4 } from 'uuid'
 import { RoomWrapper } from './styled';
 import { gql } from 'apollo-boost';
-
+import  { useRouter } from 'next/router'
 
 const GET_ROOMS = gql`
   query {
@@ -25,11 +26,23 @@ const SUB_ROOMS = gql`
   }
 `;
 
+
 const Rooms = (props) => {
   const [isRoomPopup, setIsRoomPopup] = useState(false);
-  const { loading, error, data } = useQuery(GET_ROOMS);
-  const [ rooms , setRooms] = useState([])
+  const {loading, error, data } = useQuery(GET_ROOMS);
+  const [rooms , setRooms] = useState([]);
+  const { state, dispatch } = useContext(StoreContext);
+  const router = useRouter()
 
+  useEffect(() => {
+    if(!Object.keys(state?.user ?? {}).length){
+      const user = localStorage.getItem('user');
+      dispatch({ type: "UPDATE_USER", user : JSON.parse(user)}); 
+    }
+    return () => {
+      dispatch({ type: "UPDATE_ROOM", roomId : null });
+    }
+  }, [])
 
   useSubscription(SUB_ROOMS, {
     onSubscriptionData({ subscriptionData }) {
@@ -57,6 +70,11 @@ const Rooms = (props) => {
     setIsRoomPopup(false);
   };
 
+  const onRedirectChat = (roomId) =>{
+    dispatch({ type: "UPDATE_ROOM", roomId });
+    console.log(roomId)
+    router.replace(`/chat/${roomId}`)
+  }
 
   return (
     <RoomWrapper>
@@ -74,7 +92,10 @@ const Rooms = (props) => {
                     <div className="room">
                       <div className="title-room">{room?.name ?? ""}</div>
                       <div className="button-wrapper">
-                        <Button className="button">JOIN</Button>
+                        <Button
+                         className="button"
+                         onClick={() => onRedirectChat(room?.chatRoomId ?? "")}
+                         >JOIN</Button>
                       </div>
                     </div>
                   </Card>

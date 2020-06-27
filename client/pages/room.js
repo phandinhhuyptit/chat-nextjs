@@ -9,7 +9,7 @@ const Room = dynamic({ loader: () => import('../containers/Room') })
 const RoomPage = (props) => { // eslint-disable-line
     return (
       <IndexWrapper>
-        <Layout>
+        <Layout {...props}>
           <Head>
             <title>Danh Sách Phòng</title>
 
