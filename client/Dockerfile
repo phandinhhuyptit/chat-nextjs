@@ -1,13 +1,10 @@
-FROM node:10.16.0
+FROM node:12.18.1
 
-WORKDIR /test/
+WORKDIR /chat-realtime/
 
-ADD . /test/
+ADD . /chat-realtime/
 
-RUN npm install -g express-generator
-RUN npm install -g yarn
 RUN yarn install
+RUN yarn build
 
-RUN yarn run build
-
-CMD ["yarn","start"]
+CMD ["yarn","start:prod"] 
