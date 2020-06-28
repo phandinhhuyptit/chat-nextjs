@@ -1,7 +1,7 @@
 deploy-server:
-	docker build -t wevaweb20image .
+	docker build -t chatrealtimeimage .
 	docker-compose up -d
 
 deploy-staging-server:
-	docker build -t wevaweb20image-dev .
+	docker build -t chatrealtimeimage-dev .
 	docker-compose -f docker-compose-dev.yml up -d
