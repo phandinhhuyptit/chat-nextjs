@@ -197,12 +197,4 @@ const Home = (props) => {
   );
 };
 
-
-Home.getInitialProps = async props => {
-  console.log(localStorage.getItem('user'))
-  // if(localStorage.getItem('user')){
-  //   router.push('/room')
-  // }
-  return {};
-};
 export default Home;
