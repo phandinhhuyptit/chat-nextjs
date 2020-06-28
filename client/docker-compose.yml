@@ -1,8 +1,8 @@
 version: '3.3'
 services:
-    test-container:
-        image: test-image
+    chat-realtime-container:
+        image: chatrealtimeimage
         restart: always
         ports:
             - 3001:3001
-        container_name: test-container
+        container_name: chat-realtime-container
